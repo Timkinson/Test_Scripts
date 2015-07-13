@@ -5,14 +5,16 @@ Created on Jul 2, 2015
 '''
 import unittest
 import json
+import io
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.expected_conditions import staleness_of
+from _codecs import encode
+from idlelib.IOBinding import encoding
 
-class LanguageBrowsingTest(unittest.TestCase):
+class LanguageBrowsingTest_Json(unittest.TestCase):
     
     def setUp(self):
         self.driver = webdriver.Firefox()
@@ -26,19 +28,24 @@ class LanguageBrowsingTest(unittest.TestCase):
         
         print("test_agegate_languages")
         
-        lang = {'english': ['VERIFY YOUR AGE', '/html/body/div[3]/div/div/div/nav/div/div/section/div[2]/div/div/div/footer/ul[2]/li[1]/a'], 
-                'spanish': ['VERIFICA TU EDAD', '/html/body/div[3]/div/div/div/nav/div/div/section/div[2]/div/div/div/footer/ul[2]/li[3]/a'], 
-                'german': ['BESTÄTIGE DEIN ALTER', '/html/body/div[3]/div/div/div/nav/div/div/section/div[2]/div/div/div/footer/ul[2]/li[5]/a'],
-                'italian': ['INSERISCI LA TUA DATA DI NASCITA', '/html/body/div[3]/div/div/div/nav/div/div/section/div[2]/div/div/div/footer/ul[2]/li[7]/a'],
-                'korean': ['연령 확인', '/html/body/div[3]/div/div/div/nav/div/div/section/div[2]/div/div/div/footer/ul[2]/li[9]/a'],
-                'japanese': ['年齢認証', '/html/body/div[3]/div/div/div/nav/div/div/section/div[2]/div/div/div/footer/ul[2]/li[11]/a'],
-                'french': ['VÉRIFIER VOTRE ÂGE', '/html/body/div[3]/div/div/div/nav/div/div/section/div[2]/div/div/div/footer/ul[2]/li[15]/a'],
-                'portuguese': ['VERIFIQUE SUA IDADE', '/html/body/div[3]/div/div/div/nav/div/div/section/div[2]/div/div/div/footer/ul[2]/li[17]/a'],
-                'russian': ['ПРОВЕРКА ВОЗРАСТА', '/html/body/div[3]/div/div/div/nav/div/div/section/div[2]/div/div/div/footer/ul[2]/li[19]/a']
+      
+        lang = {"english": ["VERIFY YOUR AGE", ".//*[@id='language-menu']/li[1]/a"], 
+                "spanish": ["VERIFICA TU EDAD", ".//*[@id='language-menu']/li[3]/a"], 
+                "german": ["BESTÄTIGE DEIN ALTER", ".//*[@id='language-menu']/li[5]/a"],
+                "italian": ["INSERISCI LA TUA DATA DI NASCITA", ".//*[@id='language-menu']/li[7]/a"],
+                "french": ["VÉRIFIER VOTRE ÂGE", ".//*[@id='language-menu']/li[15]/a"],
+                "portuguese": ["VERIFIQUE SUA IDADE", ".//*[@id='language-menu']/li[17]/a"],
+                "russian": ["ПРОВЕРКА ВОЗРАСТА", ".//*[@id='language-menu']/li[19]/a"]
                 }
+        
         
         driver = self.driver
         driver.get("http://gamechanger.evolvegame.com")
+        
+        JsonData  = json.dumps(lang, ensure_ascii=False)        
+        
+        with open('jsondata.txt', 'w', encoding='utf8') as outfile:
+            json.dump(JsonData, outfile, ensure_ascii=False)
                         
         try:
             element = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.CLASS_NAME, "ageheader")))

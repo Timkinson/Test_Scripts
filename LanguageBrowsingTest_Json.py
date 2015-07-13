@@ -5,11 +5,14 @@ Created on Jul 2, 2015
 '''
 import unittest
 import json
+import io
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.expected_conditions import staleness_of
+from _codecs import encode
+from idlelib.IOBinding import encoding
 
 class LanguageBrowsingTest_Json(unittest.TestCase):
     
@@ -42,10 +45,10 @@ class LanguageBrowsingTest_Json(unittest.TestCase):
         driver = self.driver
         driver.get("http://gamechanger.evolvegame.com")
         
-        JsonData  = json.dumps(lang)        
+        JsonData  = json.dumps(lang, ensure_ascii=False)        
         
-        with open('jsondata.txt', 'w') as outfile:
-            json.dump(JsonData, outfile)
+        with open('jsondata.txt', 'w', encoding='utf8') as outfile:
+            json.dump(JsonData, outfile, ensure_ascii=False)
                         
         try:
             element = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.CLASS_NAME, "ageheader")))
